@@ -16,5 +16,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Project') {
+            steps {
+                dir('frontend') {
+                    bat 'npm run build'
+                }
+            }
+        }
     }
 }
