@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "test": "jest",
     "lint": "eslint .",
     "preview": "vite preview"
   },
