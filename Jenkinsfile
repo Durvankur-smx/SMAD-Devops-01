@@ -97,9 +97,9 @@ pipeline {
                     git config user.email "jenkins@ci.com"
                     git config user.name "jenkins"
 
-                    git fetch --all
-
-                    git checkout -B develop origin/develop
+git fetch origin develop
+git checkout develop || git checkout -b develop origin/develop
+git pull origin develop
 
                     git merge origin/${env.BRANCH_NAME}
 
