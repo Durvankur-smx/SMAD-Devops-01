@@ -58,10 +58,10 @@ pipeline {
                     echo Checking if PR already exists...
 
                     curl -s -H "Authorization: token %GIT_TOKEN%" ^
-                    https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:${env.BRANCH_NAME}&base=develop ^
+                    "https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:${env.BRANCH_NAME}^&base=develop" ^
                     > pr_check.json
 
-                    findstr "\"number\"" pr_check.json >nul
+                    findstr "\\"number\\"" pr_check.json >nul
 
                     IF %ERRORLEVEL%==0 (
                         echo PR already exists. Skipping creation.
@@ -97,12 +97,19 @@ pipeline {
                     git config user.email "jenkins@ci.com"
                     git config user.name "jenkins"
 
-                    git fetch --all
+                    echo Fetching branches...
+                    git fetch origin develop
+                    git fetch origin %BRANCH_NAME%
 
-                    git checkout -B develop origin/develop
+                    echo Checking out develop...
+                    git checkout develop || git checkout -b develop origin/develop
 
-                    git merge origin/${env.BRANCH_NAME}
+                    git pull origin develop
 
+                    echo Merging feature branch...
+                    git merge origin/%BRANCH_NAME% --no-edit || echo Already merged or no changes
+
+                    echo Pushing develop...
                     git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
                     """
                 }
@@ -125,10 +132,10 @@ pipeline {
                     echo Checking if develop→main PR exists...
 
                     curl -s -H "Authorization: token %GIT_TOKEN%" ^
-                    https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:develop&base=main ^
+                    "https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:develop^&base=main" ^
                     > pr_main_check.json
 
-                    findstr "\"number\"" pr_main_check.json >nul
+                    findstr "\\"number\\"" pr_main_check.json >nul
 
                     IF %ERRORLEVEL%==0 (
                         echo PR already exists. Skipping creation.
