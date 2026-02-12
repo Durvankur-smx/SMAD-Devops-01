@@ -59,7 +59,7 @@ pipeline {
                     -H "Authorization: token %GIT_TOKEN%" ^
                     -H "Accept: application/vnd.github.v3+json" ^
                     https://api.github.com/repos/${REPO}/pulls ^
-                    -d "{\\"title\\":\\"Auto PR: %BRANCH_NAME% to develop\\",\\"head\\":\\"%BRANCH_NAME%\\",\\"base\\":\\"develop\\"}"
+                    -d "{\\"title\\":\\"Auto PR: ${env.BRANCH_NAME} to develop\\",\\"head\\":\\"${env.BRANCH_NAME}\\",\\"base\\":\\"develop\\"}"
                     """
                 }
             }
@@ -85,10 +85,9 @@ pipeline {
                     git config user.name "jenkins"
 
                     git fetch origin develop
-
                     git checkout -B develop origin/develop
 
-                    git merge origin/%BRANCH_NAME%
+                    git merge origin/${env.BRANCH_NAME}
 
                     git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
                     """
