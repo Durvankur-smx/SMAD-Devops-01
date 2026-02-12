@@ -58,10 +58,10 @@ pipeline {
                     echo Checking if PR already exists...
 
                     curl -s -H "Authorization: token %GIT_TOKEN%" ^
-                    https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:${env.BRANCH_NAME}&base=develop ^
+                    "https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:${env.BRANCH_NAME}^&base=develop" ^
                     > pr_check.json
 
-                    findstr "\"number\"" pr_check.json >nul
+                    findstr "\\"number\\"" pr_check.json >nul
 
                     IF %ERRORLEVEL%==0 (
                         echo PR already exists. Skipping creation.
@@ -78,36 +78,37 @@ pipeline {
             }
         }
 
-        stage('Auto Merge to develop') {
-            when {
-                allOf {
-                    not { branch 'develop' }
-                    not { branch 'main' }
-                }
-            }
-
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'github-creds',
-                    usernameVariable: 'GIT_USER',
-                    passwordVariable: 'GIT_PASS'
-                )]) {
-
-                    bat """
-                    git config user.email "jenkins@ci.com"
-                    git config user.name "jenkins"
-
-git fetch origin develop
-git checkout develop || git checkout -b develop origin/develop
-git pull origin develop
-
-                    git merge origin/${env.BRANCH_NAME}
-
-                    git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
-                    """
-                }
-            }
+stage('Auto Merge to develop') {
+    when {
+        allOf {
+            not { branch 'develop' }
+            not { branch 'main' }
         }
+    }
+
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'github-creds',
+            usernameVariable: 'GIT_USER',
+            passwordVariable: 'GIT_PASS'
+        )]) {
+
+            bat """
+            git config user.email "jenkins@ci.com"
+            git config user.name "jenkins"
+
+            git fetch origin develop
+            git checkout develop
+            git pull origin develop
+
+            git merge origin/${env.BRANCH_NAME}
+
+            git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
+            """
+        }
+    }
+}
+
 
         stage('Create PR Develop to Main') {
             when {
@@ -125,10 +126,10 @@ git pull origin develop
                     echo Checking if develop→main PR exists...
 
                     curl -s -H "Authorization: token %GIT_TOKEN%" ^
-                    https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:develop&base=main ^
+                    "https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:develop^&base=main" ^
                     > pr_main_check.json
 
-                    findstr "\"number\"" pr_main_check.json >nul
+                    findstr "\\"number\\"" pr_main_check.json >nul
 
                     IF %ERRORLEVEL%==0 (
                         echo PR already exists. Skipping creation.
