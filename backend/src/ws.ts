@@ -49,5 +49,5 @@ async function subscribeRoom(roomId: string) {
   });
 
   subscribedRooms.add(channel);
-  console.log()
+  
 }
