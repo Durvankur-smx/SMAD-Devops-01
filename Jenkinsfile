@@ -78,43 +78,37 @@ pipeline {
             }
         }
 
-        stage('Auto Merge to develop') {
-            when {
-                allOf {
-                    not { branch 'develop' }
-                    not { branch 'main' }
-                }
-            }
-
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'github-creds',
-                    usernameVariable: 'GIT_USER',
-                    passwordVariable: 'GIT_PASS'
-                )]) {
-
-                    bat """
-                    git config user.email "jenkins@ci.com"
-                    git config user.name "jenkins"
-
-                    echo Fetching branches...
-                    git fetch origin develop
-                    git fetch origin %BRANCH_NAME%
-
-                    echo Checking out develop...
-                    git checkout develop || git checkout -b develop origin/develop
-
-                    git pull origin develop
-
-                    echo Merging feature branch...
-                    git merge origin/%BRANCH_NAME% --no-edit || echo Already merged or no changes
-
-                    echo Pushing develop...
-                    git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
-                    """
-                }
-            }
+stage('Auto Merge to develop') {
+    when {
+        allOf {
+            not { branch 'develop' }
+            not { branch 'main' }
         }
+    }
+
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'github-creds',
+            usernameVariable: 'GIT_USER',
+            passwordVariable: 'GIT_PASS'
+        )]) {
+
+            bat """
+            git config user.email "jenkins@ci.com"
+            git config user.name "jenkins"
+
+            git fetch origin develop
+            git checkout develop
+            git pull origin develop
+
+            git merge origin/${env.BRANCH_NAME}
+
+            git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
+            """
+        }
+    }
+}
+
 
         stage('Create PR Develop to Main') {
             when {
