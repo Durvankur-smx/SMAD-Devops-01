@@ -55,4 +55,11 @@ async function subscribeRoom(roomId: string) {
   console.log()
   console.log()
   console.log()
+  console.log()
+  console.log()
+  console.log()
+  console.log()
+  console.log()
+  console.log()
+  console.log()
 }
