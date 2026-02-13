@@ -50,15 +50,6 @@ async function subscribeRoom(roomId: string) {
 
   subscribedRooms.add(channel);
 
-console.log();
-console.log();
-console.log();
-console.log();
-console.log();
-console.log();
-console.log();
-console.log();
-console.log();
-console.log();
+console.log()
 
 }
