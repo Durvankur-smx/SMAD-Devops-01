@@ -97,17 +97,18 @@ stage('Auto Merge to develop') {
             git config user.email "jenkins@ci.com"
             git config user.name "jenkins"
 
-            git fetch origin develop
-            git checkout develop
-            git pull origin develop
+            git fetch origin develop:develop
 
-            git merge origin/${env.BRANCH_NAME}
+            git checkout develop
+
+            git merge origin/%BRANCH_NAME%
 
             git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
             """
         }
     }
 }
+
 
 
         stage('Create PR Develop to Main') {
