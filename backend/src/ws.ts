@@ -72,4 +72,12 @@ export default function ws(server: http.Server) {
       socket.ping();
     });
   }, 30_000);
+  const cleanup = (socket: WebSocket) => {
+    const roomId = socketsToRoom.get(socket);
+    socketsToRoom.delete(socket);
+    if (!roomId) return;
+    const sockets = roomToSockets.get(roomId);
+    sockets?.delete(socket);
+    if (sockets?.size === 0) roomToSockets.delete(roomId);
+  };
 }
