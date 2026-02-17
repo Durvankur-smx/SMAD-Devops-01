@@ -14,8 +14,9 @@
     "@types/ws": "^8.18.1",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
+    "ioredis": "^5.9.3",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.16.3",
+    "pg": "^8.18.0",
     "redis": "^5.10.0",
     "typescript": "^5.9.3",
     "ws": "^8.18.3",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/ioredis": "^4.28.10",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.16.0"
   }
