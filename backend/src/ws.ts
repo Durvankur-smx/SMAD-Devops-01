@@ -56,8 +56,6 @@ async function subscribeRoom(roomId: string) {
   });
 
   subscribedRooms.add(channel);
-
-
 }
 
 export default function ws(server: http.Server) {
@@ -72,6 +70,7 @@ export default function ws(server: http.Server) {
       socket.ping();
     });
   }, 30_000);
+
   const cleanup = (socket: WebSocket) => {
     const roomId = socketsToRoom.get(socket);
     socketsToRoom.delete(socket);
@@ -80,4 +79,126 @@ export default function ws(server: http.Server) {
     sockets?.delete(socket);
     if (sockets?.size === 0) roomToSockets.delete(roomId);
   };
+
+  ws.on("connection", (socket: AuthedSocket, req) => {
+    console.log("socket connected", socket.user?.userId);
+
+    try {
+      const token = new URL(
+        req.url!,
+        `http://${req.headers.host}`,
+      ).searchParams.get("token");
+      if (!token) {
+        socket.close(4001, "Not authorized!");
+        return;
+      }
+      const decoded = jwt.verify(token, JWT_SECRET!) as {
+        userId: string;
+        email: string;
+        name: string;
+      };
+      socket.user = {
+        userId: decoded.userId,
+        email: decoded.email,
+        name: decoded.name,
+      };
+    } catch (err) {
+      if (err instanceof JsonWebTokenError)
+        return socket.close(4002, "Invalid token");
+      socket.close();
+      return;
+    }
+    (socket as any).isAlive = true;
+    socket.on("pong", () => {
+      (socket as any).isAlive = true;
+    });
+    socket.id = crypto.randomUUID();
+    socket.on("message", (event) => {
+      let parsedMessage: Message;
+      try {
+        parsedMessage = JSON.parse(event.toString());
+      } catch (error) {
+        return;
+      }
+      if (parsedMessage.type === "join") {
+        const prevRoom = socketsToRoom.get(socket);
+        if (prevRoom) roomToSockets.get(prevRoom)?.delete(socket);
+
+        if (!roomToSockets.has(parsedMessage.roomId)) {
+          roomToSockets.set(parsedMessage.roomId, new Set());
+        }
+        roomToSockets.get(parsedMessage.roomId)?.add(socket);
+        socketsToRoom.set(socket, parsedMessage.roomId);
+        subscribeRoom(parsedMessage.roomId);
+        const roomId = socketsToRoom.get(socket);
+        const event = {
+          type: "user_joined",
+          roomId,
+          sender: socket.user,
+          senderSocketId: socket.id,
+        };
+        pub.publish(`room:${roomId}`, JSON.stringify(event));
+      }
+
+      if (parsedMessage.type === "chat") {
+        const roomId = socketsToRoom.get(socket);
+        if (!roomId) return;
+        const event = {
+          roomId,
+          message: parsedMessage.message,
+          sender: socket.user!,
+          senderSocketId: socket.id,
+          timestamp: new Date().toISOString(),
+        };
+        console.log("PUBLISH", roomId, socket.user?.userId);
+
+        pub.publish(`room:${roomId}`, JSON.stringify(event));
+      }
+      if (parsedMessage.type === "typing") {
+        const roomId = socketsToRoom.get(socket);
+        if (!roomId) return;
+        const event = {
+          type: "typing",
+          roomId,
+          sender: socket.user!,
+          senderSocketId: socket.id,
+        };
+        pub.publish(`room:${roomId}`, JSON.stringify(event));
+      }
+
+      if (parsedMessage.type === "user_joined") {
+        const roomId = socketsToRoom.get(socket);
+        if (!roomId) return;
+        const event = {
+          type: "user_joined",
+          roomId,
+          sender: socket.user,
+          senderSocketId: socket.id,
+        };
+        pub.publish(`room:${roomId}`, JSON.stringify(event));
+      }
+
+      if (parsedMessage.type === "user_left") {
+        const roomId = socketsToRoom.get(socket);
+        if (!roomId) return;
+        const event = {
+          type: "user_left",
+          roomId,
+          sender: socket.user,
+          senderSocketId: socket.id,
+        };
+        pub.publish(`room:${roomId}`, JSON.stringify(event));
+      }
+
+      if (parsedMessage.type === "exit") {
+        cleanup(socket);
+      }
+    });
+    socket.on("close", () => {
+      cleanup(socket);
+    });
+  });
+  ws.on("close", () => {
+    clearInterval(heartBeat);
+  });
 }
