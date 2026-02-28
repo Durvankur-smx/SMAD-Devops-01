@@ -43,10 +43,15 @@ jobs:
           LOG="merge-log.md"
 
           echo "## Merge on ${{ steps.pr.outputs.DATE }}" >> $LOG
+            echo "" >> $LOG
           echo "**PR Title:** ${{ steps.pr.outputs.TITLE }}" >> $LOG
+            echo "" >> $LOG
           echo "**PR Author:** @${{ steps.pr.outputs.AUTHOR }}" >> $LOG
+            echo "" >> $LOG
           echo "**Merged By:** @${{ steps.pr.outputs.MERGED_BY }}" >> $LOG
+          echo "" >> $LOG
           echo "**From Branch:** ${{ steps.pr.outputs.SOURCE }}" >> $LOG
+          echo "" >> $LOG
           echo "**Into Branch:** ${{ steps.pr.outputs.TARGET }}" >> $LOG
           echo "" >> $LOG
           echo "**Commits:**" >> $LOG
@@ -61,8 +66,8 @@ jobs:
 
       - name: Commit log file
         run: |
-          git config user.name "merge-logger-bot"
-          git config user.email "bot@github.com"
+          git config user.name "Shrinivas2708"
+          git config user.email "ssherikar2005@gmail.com"
           git add merge-log.md
           git commit -m "Update merge log for PR #${{ github.event.pull_request.number }}" || echo "No changes"
           git push
