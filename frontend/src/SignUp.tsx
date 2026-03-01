@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SignUp() {
@@ -23,11 +23,11 @@ function SignUp() {
       console.log(error);
     }
   };
-  useEffect(()=>{
-      if(localStorage.getItem("token")){
-          navigate("/")
-      }
-    },[])
+  useEffect(() => {
+  if (localStorage.getItem("token")) {
+    navigate("/");
+  }
+}, [navigate]);  
   return (
     <div className="w-full h-screen bg-black text-white flex justify-center items-center">
       <div className="border rounded border-white/20 max-w-xl w-full p-5 space-y-4">
