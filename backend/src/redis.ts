@@ -1,21 +1,20 @@
-import Redis from "ioredis";
+import { createClient } from "redis";
 
-// publisher
-export const pub = new Redis({
-  host: "127.0.0.1",
-  port: 6379,
-});
+export const pub = createClient({
+    url:"redis://localhost:6379"
+})
+export const sub = pub.duplicate()
+await pub.connect()
+await sub.connect()
+export interface ChatEvent {
+  roomId: string;
+  message: string;
+  sender: {
+    userId: string;
+    email: string;
+    name: string;
+  };
+  timestamp: string;
+}
 
-// subscriber
-export const sub = new Redis({
-  host: "127.0.0.1",
-  port: 6379,
-});
-
-sub.on("connect", () => {
-  console.log("Redis Subscriber Connected");
-});
-
-pub.on("connect", () => {
-  console.log("Redis Publisher Connected");
-});
+console.log("Redis connected")
