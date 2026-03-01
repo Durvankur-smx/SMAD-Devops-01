@@ -48,3 +48,22 @@
 
 ---
 
+## Merge on Sun Mar  1 11:49:25 UTC 2026
+
+**PR Title:** Auto PR: develop to main
+
+**PR Author:** @Durvankur-smx
+
+**Merged By:** @Shrinivas2708
+
+**From Branch:** develop
+
+**Into Branch:** main
+
+**Commits:**
+- Added App.css changes
+- commit
+- removed unneccessary file
+
+---
+
