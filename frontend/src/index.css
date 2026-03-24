@@ -12,7 +12,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+/* Make clicks pass-through */
 a {
   font-weight: 500;
   color: #646cff;
