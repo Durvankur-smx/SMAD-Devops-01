@@ -15,13 +15,19 @@ pipeline {
             }
         }
 
-          stage('Start Infra (Postgres + Redis)') {
-              steps {
-                  bat 'docker compose down'
-                  bat 'docker compose up -d'
-              }
-          }
+        stage('Start Infra (Postgres + Redis)') {
+            steps {
+                bat 'docker compose down'
+                bat 'docker compose up -d'
+                bat 'timeout /t 10'
+            }
+        }
 
+        stage('Verify Containers') {
+            steps {
+                bat 'docker ps'
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
@@ -86,38 +92,36 @@ pipeline {
             }
         }
 
-stage('Auto Merge to develop') {
-    when {
-        allOf {
-            not { branch 'develop' }
-            not { branch 'main' }
+        stage('Auto Merge to develop') {
+            when {
+                allOf {
+                    not { branch 'develop' }
+                    not { branch 'main' }
+                }
+            }
+
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_PASS'
+                )]) {
+
+                    bat """
+                    git config user.email "jenkins@ci.com"
+                    git config user.name "jenkins"
+
+                    git fetch origin develop:develop
+
+                    git checkout develop
+
+                    git merge origin/%BRANCH_NAME%
+
+                    git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
+                    """
+                }
+            }
         }
-    }
-
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'github-creds',
-            usernameVariable: 'GIT_USER',
-            passwordVariable: 'GIT_PASS'
-        )]) {
-
-            bat """
-            git config user.email "jenkins@ci.com"
-            git config user.name "jenkins"
-
-            git fetch origin develop:develop
-
-            git checkout develop
-
-            git merge origin/%BRANCH_NAME%
-
-            git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
-            """
-        }
-    }
-}
-
-
 
         stage('Create PR Develop to Main') {
             when {
@@ -153,6 +157,13 @@ stage('Auto Merge to develop') {
                     """
                 }
             }
+        }
+
+    }
+
+    post {
+        always {
+            bat 'docker compose down'
         }
     }
 }
