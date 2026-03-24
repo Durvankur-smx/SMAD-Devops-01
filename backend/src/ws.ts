@@ -198,7 +198,6 @@ export default function ws(server: http.Server) {
       cleanup(socket);
     });
   });
-  // console.log()
   ws.on("close", () => {
     clearInterval(heartBeat);
   });
