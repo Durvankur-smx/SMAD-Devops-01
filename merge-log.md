@@ -48,3 +48,97 @@
 
 ---
 
+## Merge on Sun Mar  1 11:49:25 UTC 2026
+
+**PR Title:** Auto PR: develop to main
+
+**PR Author:** @Durvankur-smx
+
+**Merged By:** @Shrinivas2708
+
+**From Branch:** develop
+
+**Into Branch:** main
+
+**Commits:**
+- Added App.css changes
+- commit
+- removed unneccessary file
+
+---
+
+## Merge on Sun Mar  1 12:58:04 UTC 2026
+
+**PR Title:** Auto PR: develop to main
+
+**PR Author:** @Durvankur-smx
+
+**Merged By:** @Shrinivas2708
+
+**From Branch:** develop
+
+**Into Branch:** main
+
+**Commits:**
+- small UI improvement in Chat component
+
+---
+
+## Merge on Sun Mar  1 15:13:01 UTC 2026
+
+**PR Title:** Auto PR: develop to main
+
+**PR Author:** @Durvankur-smx
+
+**Merged By:** @Shrinivas2708
+
+**From Branch:** develop
+
+**Into Branch:** main
+
+**Commits:**
+- updated singup
+- Merge remote-tracking branch 'origin/ADT23SOCB1557' into develop
+- signup updates
+- Merge remote-tracking branch 'origin/ADT23SOCB1557' into develop
+- added changes
+- Merge remote-tracking branch 'origin/ADT23SOCB1610' into develop
+
+---
+
+## Merge on Tue Mar 24 04:24:01 UTC 2026
+
+**PR Title:** Auto PR: develop to main
+
+**PR Author:** @Durvankur-smx
+
+**Merged By:** @secondcitysam
+
+**From Branch:** develop
+
+**Into Branch:** main
+
+**Commits:**
+- Updated global background styling
+- Merge remote-tracking branch 'origin/ADT23SOCB1628' into develop
+
+---
+
+## Merge on Tue Mar 24 06:44:15 UTC 2026
+
+**PR Title:** Adt24 socbd209
+
+**PR Author:** @secondcitysam
+
+**Merged By:** @secondcitysam
+
+**From Branch:** ADT24SOCBD209
+
+**Into Branch:** main
+
+**Commits:**
+- temp save before rebase
+- temp save before rebase 2
+
+---
+
