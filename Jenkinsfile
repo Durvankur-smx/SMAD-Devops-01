@@ -15,6 +15,14 @@ pipeline {
             }
         }
 
+          stage('Start Infra (Postgres + Redis)') {
+              steps {
+                  bat 'docker compose down'
+                  bat 'docker compose up -d'
+              }
+          }
+
+
         stage('Install Dependencies') {
             steps {
                 dir('frontend') {
