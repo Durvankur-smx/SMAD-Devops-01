@@ -8,14 +8,10 @@ services:
       POSTGRES_DB: local_pg
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
 
   redis:
     image: redis:7.4-alpine
     restart: unless-stopped
-    ports:
-      - "6384:6383"
     command: redis-server --save 60 1 --loglevel warning
     volumes:
       - redis_data:/data
