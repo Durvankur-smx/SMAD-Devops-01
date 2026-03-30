@@ -161,3 +161,33 @@
 
 ---
 
+## Merge on Mon Mar 30 04:13:40 UTC 2026
+
+**PR Title:** Auto PR: develop to main
+
+**PR Author:** @Durvankur-smx
+
+**Merged By:** @Durvankur-smx
+
+**From Branch:** develop
+
+**Into Branch:** main
+
+**Commits:**
+- Merge pull request #76 from Durvankur-smx/develop
+- 
+- from develop
+- backend completed
+- backend completed
+- fix docker container name conflict
+- fix missing docker volumes
+- final v1
+- final v3
+- final v4
+- final v5
+- final v6
+- final v7
+- final v9
+
+---
+
