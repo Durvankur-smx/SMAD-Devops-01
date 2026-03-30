@@ -5,6 +5,7 @@ pipeline {
         REPO = "Durvankur-smx/SMAD-Devops-01"
         TARGET_BRANCH = "develop"
         MAIN_BRANCH = "main"
+        DB_HOST = "db"
     }
 
     stages {
@@ -19,13 +20,12 @@ pipeline {
             steps {
                 bat 'docker compose down'
                 bat 'docker compose up -d'
-
             }
         }
 
         stage('Verify Containers') {
             steps {
-                bat 'docker ps'
+                bat 'docker compose ps'
             }
         }
 
@@ -47,8 +47,10 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                dir('frontend') {
-                    bat 'npm test'
+                withEnv(["DB_HOST=db"]) {
+                    dir('frontend') {
+                        bat 'npm test'
+                    }
                 }
             }
         }
