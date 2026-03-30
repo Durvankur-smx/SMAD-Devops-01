@@ -1,9 +1,6 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:16
-    container_name: local_postgres_db
     restart: unless-stopped
     environment:
       POSTGRES_USER: myuser
@@ -11,15 +8,10 @@ services:
       POSTGRES_DB: local_pg
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
   redis:
     image: redis:7.4-alpine
-    container_name: local_redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning
     volumes:
       - redis_data:/data
