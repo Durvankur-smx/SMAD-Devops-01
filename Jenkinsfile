@@ -63,12 +63,11 @@ pipeline {
         }
 
         stage('Create PR to Develop') {
-            when {
-                allOf {
-                    not { branch 'develop' }
-                    not { branch 'main' }
-                }
-            }
+             when {
+    expression {
+        return env.CURRENT_BRANCH != 'develop' && env.CURRENT_BRANCH != 'main'
+    }
+}
 
             steps {
                 withCredentials([usernamePassword(
@@ -103,11 +102,10 @@ pipeline {
 
         stage('Auto Merge to develop') {
             when {
-                allOf {
-                    not { branch 'develop' }
-                    not { branch 'main' }
-                }
-            }
+    expression {
+        return env.CURRENT_BRANCH != 'develop' && env.CURRENT_BRANCH != 'main'
+    }
+}
 
             steps {
                 withCredentials([usernamePassword(
@@ -124,9 +122,9 @@ pipeline {
 
                     git checkout develop
 
-                    git merge origin/%BRANCH_NAME%
+                   git merge origin/%CURRENT_BRANCH%
 
-                    git push https://%GIT_USER%:%GIT_PASS%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
+                    git push https://%GIT_USER%:%GIT_TOKEN%@github.com/Durvankur-smx/SMAD-Devops-01.git develop
                     """
                 }
             }
@@ -134,8 +132,10 @@ pipeline {
 
         stage('Create PR Develop to Main') {
             when {
-                branch 'develop'
-            }
+    expression {
+        return env.CURRENT_BRANCH != 'develop' && env.CURRENT_BRANCH != 'main'
+    }
+}
 
             steps {
                 withCredentials([usernamePassword(
