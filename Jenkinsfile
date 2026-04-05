@@ -16,10 +16,9 @@ pipeline {
         }
 
         stage('Start Infra (Postgres + Redis)') {
-            steps {
-                bat 'docker compose down'
-                bat 'docker compose up -d'
-  
+         steps {
+        bat 'docker compose -f docker-compose.yml down'
+        bat 'docker compose -f docker-compose.yml up -d'
             }
         }
 
