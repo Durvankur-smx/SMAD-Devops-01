@@ -5,14 +5,22 @@ pipeline {
         REPO = "Durvankur-smx/SMAD-Devops-01"
         TARGET_BRANCH = "develop"
         MAIN_BRANCH = "main"
+         CURRENT_BRANCH = ""
     }
 
     stages {
 
         stage('Confirm Checkout') {
             steps {
-                echo "Branch: ${env.BRANCH_NAME}"
-            }
+              script {
+                 env.CURRENT_BRANCH = bat(
+                        script: 'git rev-parse --abbrev-ref HEAD',
+                       returnStdout: true
+                    ).trim()
+
+                 echo "Branch: ${env.CURRENT_BRANCH}"
+              }
+         }
         }
 
         stage('Start Infra (Postgres + Redis)') {
@@ -71,7 +79,7 @@ pipeline {
                     echo Checking if PR already exists...
 
                     curl -s -H "Authorization: token %GIT_TOKEN%" ^
-                    "https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:${env.BRANCH_NAME}^&base=develop" ^
+                    "https://api.github.com/repos/${REPO}/pulls?head=Durvankur-smx:${env.CURRENT_BRANCH}^&base=develop" ^
                     > pr_check.json
 
                     findstr "\\"number\\"" pr_check.json >nul
@@ -84,7 +92,7 @@ pipeline {
                         -H "Authorization: token %GIT_TOKEN%" ^
                         -H "Accept: application/vnd.github.v3+json" ^
                         https://api.github.com/repos/${REPO}/pulls ^
-                        -d "{\\"title\\":\\"Auto PR: ${env.BRANCH_NAME} to develop\\",\\"head\\":\\"${env.BRANCH_NAME}\\",\\"base\\":\\"develop\\"}"
+                        -d "{\\"title\\":\\"Auto PR: ${env.CURRENT_BRANCH} to develop\\",\\"head\\":\\"${env.CURRENT_BRANCH}\\",\\"base\\":\\"develop\\"}"
                     )
                     """
                 }
