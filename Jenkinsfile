@@ -11,17 +11,19 @@ pipeline {
     stages {
 
         stage('Confirm Checkout') {
-            steps {
-              script {
-                 env.CURRENT_BRANCH = bat(
-                        script: 'git rev-parse --abbrev-ref HEAD',
-                       returnStdout: true
-                    ).trim()
+    steps {
+        script {
+            env.CURRENT_BRANCH = powershell(
+                script: '(git rev-parse --abbrev-ref HEAD).Trim()',
+                returnStdout: true
+            ).trim()
 
-                 echo "Branch: ${env.CURRENT_BRANCH}"
-              }
-         }
+            echo "Branch: ${env.CURRENT_BRANCH}"
         }
+    }
+}
+
+         
 
         stage('Start Infra (Postgres + Redis)') {
          steps {
