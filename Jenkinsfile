@@ -19,7 +19,7 @@ pipeline {
             steps {
                 bat 'docker compose down'
                 bat 'docker compose up -d'
-                bat 'timeout /t 10'
+  
             }
         }
 
